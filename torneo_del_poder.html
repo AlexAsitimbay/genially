@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Torneo del Poder — Matemática Saiyan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a12;
+    --bg2: #151322;
+    --gold: #ffb02e;
+    --ki-blue: #4fc3f7;
+    --ki-orange: #ff6a1a;
+    --danger: #e63946;
+    --white: #f4f2ec;
+    --line: rgba(244,242,236,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(255,106,26,0.12), transparent 45%),
+      radial-gradient(circle at 90% 100%, rgba(79,195,247,0.10), transparent 45%),
+      var(--bg);
+    color:var(--white);
+    font-family:'Work Sans', sans-serif;
+    min-height:100vh;
+  }
+  h1,h2,.display{ font-family:'Bebas Neue', sans-serif; letter-spacing:1px; }
+  .app{ max-width:920px; margin:0 auto; padding:18px 16px 40px; }
+
+  header{ text-align:center; padding:20px 0 6px; }
+  .eyebrow{ font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:3px; color:var(--ki-blue); text-transform:uppercase; opacity:.9; }
+  header h1{ font-size:46px; margin:4px 0 0; background:linear-gradient(90deg,var(--gold),var(--ki-orange)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  header p{ font-size:13px; opacity:.65; margin:2px 0 0; }
+
+  /* KI METER */
+  .ki-wrap{ margin:18px 0 8px; }
+  .ki-label{ display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:11px; opacity:.75; margin-bottom:5px; }
+  .ki-bar{ height:10px; border-radius:6px; background:rgba(255,255,255,0.08); overflow:hidden; border:1px solid var(--line); }
+  .ki-fill{ height:100%; width:0%; border-radius:6px; background:linear-gradient(90deg,var(--ki-blue),var(--ki-orange),var(--gold)); transition:width .5s ease; box-shadow:0 0 12px rgba(255,176,46,0.6); }
+
+  .menu{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:16px 0; }
+  .menu button{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px;
+    background:transparent; border:1px solid var(--line); color:var(--white);
+    padding:6px 10px; border-radius:20px; cursor:pointer; opacity:.65;
+  }
+  .menu button:hover{ opacity:1; border-color:var(--gold); }
+  .menu button.active{ opacity:1; border-color:var(--ki-orange); color:var(--gold); }
+  .menu button.done::after{ content:" ⚡"; }
+
+  /* ROUND BANNER */
+  .round-banner{
+    background:linear-gradient(120deg, rgba(255,106,26,0.14), rgba(79,195,247,0.10));
+    border:1px solid var(--line); border-left:4px solid var(--ki-orange);
+    border-radius:10px; padding:14px 18px; margin-bottom:16px;
+  }
+  .round-banner .rname{ font-family:'Bebas Neue', sans-serif; font-size:22px; color:var(--gold); letter-spacing:1px; }
+  .round-banner p{ margin:4px 0 0; font-size:13.5px; opacity:.85; line-height:1.5; }
+
+  .stage{
+    background:var(--bg2); border:1px solid var(--line); border-radius:14px;
+    padding:26px 24px 22px; position:relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+  .opponent-tag{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'JetBrains Mono', monospace; font-size:11px;
+    padding:4px 10px; border-radius:20px; margin-bottom:10px; letter-spacing:.5px;
+    border:1px solid var(--ki-blue); color:var(--ki-blue);
+  }
+  .slide-title{ font-size:28px; margin:2px 0 4px; }
+  .slide-sub{ font-family:'JetBrains Mono', monospace; font-size:11px; opacity:.55; margin-bottom:14px; }
+  .statement{ font-size:15.5px; line-height:1.6; margin-bottom:14px; }
+  .statement b{ color:var(--gold); }
+  .formula{
+    font-family:'JetBrains Mono', monospace; font-size:14.5px; background:rgba(0,0,0,0.3);
+    padding:10px 14px; border-left:3px solid var(--ki-blue); border-radius:4px; margin:10px 0;
+    white-space:pre-wrap;
+  }
+  table.dbs{ border-collapse:collapse; margin:14px 0; width:100%; font-family:'JetBrains Mono', monospace; font-size:12.5px;}
+  table.dbs th, table.dbs td{ border:1px solid var(--line); padding:6px 9px; text-align:center; }
+  table.dbs th{ color:var(--gold); }
+
+  .reveal-btn{
+    font-family:'Bebas Neue', sans-serif; font-size:18px; letter-spacing:1px;
+    background:linear-gradient(90deg,var(--ki-orange),var(--gold)); border:none; color:#1a0f00;
+    padding:10px 22px; border-radius:30px; cursor:pointer; margin-top:6px; box-shadow:0 0 16px rgba(255,176,46,0.35);
+  }
+  .reveal-btn:hover{ filter:brightness(1.08); }
+
+  .solution{ margin-top:16px; padding-top:14px; border-top:1px dashed var(--line); display:none; }
+  .solution.show{ display:block; animation:kiIn .35s ease; }
+  @keyframes kiIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  .tag{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--ki-blue); letter-spacing:1px; }
+  .answer{ font-family:'Bebas Neue', sans-serif; font-size:22px; color:var(--gold); margin-top:6px; letter-spacing:.5px; }
+
+  .confirm-row{ margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; }
+  .confirm-row button{
+    font-family:'JetBrains Mono', monospace; font-size:12px; border-radius:8px; padding:9px 14px; cursor:pointer;
+  }
+  .win-btn{ background:rgba(79,195,247,0.15); border:1px solid var(--ki-blue); color:var(--ki-blue); }
+  .retry-btn{ background:rgba(230,57,70,0.12); border:1px solid var(--danger); color:var(--danger); }
+  .confirm-msg{ font-size:13px; margin-top:10px; opacity:.85; min-height:18px; }
+
+  .nav{ display:flex; justify-content:space-between; align-items:center; margin-top:18px; }
+  .nav button{
+    font-family:'JetBrains Mono', monospace; font-size:12px; background:none;
+    border:1px solid var(--line); color:var(--white); padding:9px 16px; border-radius:8px; cursor:pointer;
+  }
+  .nav button:hover{ border-color:var(--gold); color:var(--gold); }
+  .nav button:disabled{ opacity:.3; cursor:default; }
+  .dots{ font-family:'JetBrains Mono', monospace; font-size:12px; opacity:.55; }
+
+  /* VICTORY OVERLAY */
+  .overlay{
+    position:fixed; inset:0; background:rgba(5,5,10,0.92); display:none;
+    align-items:center; justify-content:center; z-index:50; text-align:center; padding:20px;
+  }
+  .overlay.show{ display:flex; }
+  .overlay .box{ max-width:520px; }
+  .overlay h2{ font-size:52px; background:linear-gradient(90deg,var(--gold),var(--ki-orange)); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:6px;}
+  .overlay p{ font-size:15px; line-height:1.6; opacity:.9; }
+  .overlay button{
+    margin-top:18px; font-family:'Bebas Neue', sans-serif; font-size:18px; letter-spacing:1px;
+    background:linear-gradient(90deg,var(--ki-orange),var(--gold)); border:none; color:#1a0f00;
+    padding:10px 26px; border-radius:30px; cursor:pointer;
+  }
+
+  @media (max-width:560px){
+    header h1{ font-size:34px; }
+    .stage{ padding:18px 14px; }
+    .slide-title{ font-size:22px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="eyebrow">Universo 7 · Torneo del Poder</div>
+    <h1>MATEMÁTICA SAIYAN</h1>
+    <p>Resuelve cada acertijo para acumular ki y avanzar de ronda contra los guerreros de otros universos</p>
+  </header>
+
+  <div class="ki-wrap">
+    <div class="ki-label"><span>KI ACUMULADO</span><span id="kiPct">0%</span></div>
+    <div class="ki-bar"><div class="ki-fill" id="kiFill"></div></div>
+  </div>
+
+  <div class="menu" id="menu"></div>
+
+  <div class="round-banner" id="roundBanner" style="display:none;">
+    <div class="rname" id="roundName"></div>
+    <p id="roundText"></p>
+  </div>
+
+  <div class="stage">
+    <span class="opponent-tag" id="opponentTag"></span>
+    <div class="slide-sub" id="slideSub"></div>
+    <h2 class="slide-title" id="slideTitle"></h2>
+    <div class="statement" id="slideBody"></div>
+    <button class="reveal-btn" id="revealBtn">⚡ ver solución</button>
+    <div class="solution" id="solutionBox">
+      <div class="tag">SOLUCIÓN</div>
+      <div id="solutionBody"></div>
+      <div class="confirm-row">
+        <button class="win-btn" id="winBtn">✔ ¡Coincide, gano ki!</button>
+        <button class="retry-btn" id="retryBtn">✘ Fallé, lo repaso</button>
+      </div>
+      <div class="confirm-msg" id="confirmMsg"></div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button id="prevBtn">← anterior</button>
+    <div class="dots" id="dots"></div>
+    <button id="nextBtn">siguiente →</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="box">
+    <h2>¡VICTORIA!</h2>
+    <p>El equipo del Universo 7 resuelve el último acertijo justo cuando el tiempo se agota. El ki acumulado brilla con la fuerza de los ocho universos supervivientes: la lógica, los conjuntos, las ecuaciones y las funciones se dominaron una por una.
+    Goku sonríe y dice que ningún Jiren puede contra alguien que entiende sus propias herramientas. El Universo 7 se salva — y tú, Guerrero de la Matemática, fuiste quien inclinó la balanza.</p>
+    <button onclick="document.getElementById('overlay').classList.remove('show')">volver al torneo</button>
+  </div>
+</div>
+
+<script>
+const T = (opponent, title, body, solution) => ({opponent, title, body, solution});
+
+const rounds = [
+  {from:0, to:1, name:"RONDA 1 · vs. Universo 9", opponent:"Rozie & Basil",
+   text:"El árbitro Marcarita da inicio al torneo. Los guerreros del Universo 9 abren el combate con trampas lógicas: solo entendiendo cuándo un enunciado es verdadero, falso o simplemente contingente podrás esquivar sus golpes de proposición."},
+  {from:2, to:3, name:"RONDA 2 · vs. Universo 4", opponent:"Los Sabios de Conjuntos",
+   text:"El Universo 4 pelea agrupando fuerzas: combinan escuadrones que se solapan entre sí. Para contarlos con precisión necesitas separar lo exclusivo de lo compartido — la teoría de conjuntos es tu escudo."},
+  {from:4, to:5, name:"RONDA 3 · vs. Universo 6", opponent:"Cabba, el Saiyan orgulloso",
+   text:"Cabba reta al equipo con un duelo de proporciones: cuadrillas de guerreros construyendo fortalezas a distinto ritmo. Si dominas la regla de tres, calculas exactamente cuánto ki necesitas para igualar su velocidad."},
+  {from:6, to:8, name:"RONDA 4 · vs. Universo 6", opponent:"Caulifla y Kale fusionando ataques",
+   text:"Caulifla y Kale atacan en conjunto, combinando técnicas que solo se resuelven despejando variable por variable. Los sistemas de ecuaciones son el único modo de predecir dónde caerá cada golpe."},
+  {from:9, to:16, name:"RONDA 5 · vs. Universo 3", opponent:"Los Androides de Universo 3",
+   text:"Los androides del Universo 3 no atacan de frente: acorralan con límites, rangos y restricciones invisibles. Cada inecuación que resuelvas —lineal, cuadrática, racional, con valor absoluto, irracional, exponencial o logarítmica— cierra una trampa antes de que se active."},
+  {from:17, to:22, name:"RONDA 6 · vs. Universo 11", opponent:"Toppo y Dyspo, guardianes de la justicia",
+   text:"Toppo exige precisión: cada función tiene un dominio donde puede existir y un rango donde puede golpear. Entiende el comportamiento de rectas, parábolas, racionales, logaritmos y exponenciales, y sabrás exactamente dónde plantarte."},
+  {from:23, to:26, name:"RONDA FINAL · vs. Jiren", opponent:"Jiren, el más fuerte",
+   text:"Jiren combina todo tu entrenamiento contra ti: suma, resta, multiplica y divide tus propias técnicas, y las evalúa en el momento exacto en que las lanzas. Solo dominando las operaciones entre funciones podrás sostenerte en pie para el golpe final."},
+];
+
+function findRound(i){ return rounds.find(r => i>=r.from && i<=r.to); }
+
+const slides = [
+T("Rozie & Basil","Lógica — contingencia",
+`Determina la solución de: <span class="formula">[(p ∧ q) → (r ∨ ¬p)]</span>`,
+`<table class="dbs"><tr><th>p</th><th>q</th><th>r</th><th>(p∧q)</th><th>¬p</th><th>(r∨¬p)</th><th>(p∧q)→(r∨¬p)</th></tr>
+<tr><td>V</td><td>V</td><td>V</td><td>V</td><td>F</td><td>V</td><td>V</td></tr>
+<tr><td>V</td><td>V</td><td>F</td><td>V</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>V</td><td>F</td><td>V</td><td>F</td><td>F</td><td>V</td><td>V</td></tr>
+<tr><td>V</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td><td>V</td></tr>
+<tr><td>F</td><td>V</td><td>V</td><td>F</td><td>V</td><td>V</td><td>V</td></tr>
+<tr><td>F</td><td>V</td><td>F</td><td>F</td><td>V</td><td>V</td><td>V</td></tr>
+<tr><td>F</td><td>F</td><td>V</td><td>F</td><td>V</td><td>V</td><td>V</td></tr>
+<tr><td>F</td><td>F</td><td>F</td><td>F</td><td>V</td><td>V</td><td>V</td></tr>
+</table><div class="answer">Mezcla de V y F → Contingencia lógica</div>`),
+
+T("Rozie & Basil","Leyes de implicación — tautología",
+`Demuestra que <span class="formula">[p ∧ (p → q)] → q</span> es una tautología (Modus Ponens).`,
+`<table class="dbs"><tr><th>p</th><th>q</th><th>p→q</th><th>p∧(p→q)</th><th>[p∧(p→q)]→q</th></tr>
+<tr><td>V</td><td>V</td><td>V</td><td>V</td><td>V</td></tr>
+<tr><td>V</td><td>F</td><td>F</td><td>F</td><td>V</td></tr>
+<tr><td>F</td><td>V</td><td>V</td><td>F</td><td>V</td></tr>
+<tr><td>F</td><td>F</td><td>V</td><td>F</td><td>V</td></tr>
+</table><div class="answer">Todas V → Sí, es tautología</div>`),
+
+T("Sabios del U4","Conjuntos — actividades escolares",
+`100 estudiantes. Fútbol: 26, Música: 38, Teatro: 33. Fútbol∩Música: 15, Fútbol∩Teatro: 10, Teatro∩Música: 16, las 3: 6.<br><br>
+① ¿Cuántos practican <b>exclusivamente</b> fútbol?<br>
+② ¿Cuántos participan en <b>al menos 2</b> actividades?`,
+`Solo fútbol = 26 − (15+10−6) = <span class="answer">7 estudiantes</span><br><br>
+Al menos 2 actividades = <span class="answer">29 estudiantes</span>`),
+
+T("Sabios del U4","Conjuntos — actividad extracurricular",
+`Universo = 200 estudiantes, lugares: Rancho, Madrina, Mecánica. Los 3 a la vez: 12. Solo Mecánica: 2. Solo Madrina: 2. Solo Rancho: 12.<br><br>
+① ¿Cuántos van <b>exclusivamente</b> al Rancho?<br>
+② ¿Cuántos van exclusivamente a <b>uno</b> de los tres lugares?`,
+`① Exclusivamente al Rancho = <span class="answer">12 personas</span><br><br>
+② Exclusivamente a uno solo = 2+2+12 = <span class="answer">16 personas</span>`),
+
+T("Cabba","Regla de 3 — obreros y casas",
+`Si 4 obreros tardan 10 días en construir 2 casas, ¿cuántos días tardarán 8 obreros en construir 4 casas?
+<table class="dbs"><tr><th>Obreros</th><th>Días</th><th>Casas</th></tr><tr><td>4</td><td>10</td><td>2</td></tr><tr><td>8</td><td>x</td><td>4</td></tr></table>`,
+`<div class="formula">(8/4)·(2/4) = 10/x → 1 = 10/x</div><div class="answer">x = 10 días</div>`),
+
+T("Cabba","Regla de 3 — obreros y jornada",
+`10 obreros a 6 horas diarias terminan una obra en 12 días. Si se reduce a 8 obreros pero se sube la jornada a 9 horas diarias, ¿cuántos días tardarán?`,
+`<div class="formula">x = 12 · (10/8) · (6/9) = 12 · (10/12)</div><div class="answer">x = 10 días</div>`),
+
+T("Caulifla & Kale","Sistemas — eliminación",
+`Resuelve por eliminación:<div class="formula">2x + 3y = 8
+x  − 3y = −2</div>`,
+`Sumando: 3x=6 → x=2. Sustituyendo: 2−3y=−2 → y=4/3<div class="answer">(x=2, y=4/3)</div>`),
+
+T("Caulifla & Kale","Sistemas — sustitución (3×3)",
+`Resuelve el sistema:<div class="formula">2x + 3y + z = 15   (1)
+ x + 2y + 2z = 13   (2)
+3x +  y + 2z = 17   (3)</div>`,
+`Despejando y sustituyendo sucesivamente se llega a z=3, y=2, x=3.<div class="answer">x=3, y=2, z=3</div>`),
+
+T("Caulifla & Kale","Sistemas — igualación",
+`Resuelve por igualación:<div class="formula">x + y = 7
+2x − y = 1</div>`,
+`x=7−y, x=1+y → 7−y=1+y → y=3, x=4<div class="answer">(x=4, y=3)</div>`),
+
+T("Androide U3","Inecuación lineal",
+`Resuelve:<div class="formula">−3x ≤ 11 − 5</div>`,
+`−3x ≤ 6 → x ≥ −2 (se invierte al dividir entre negativo)<div class="answer">[−2, +∞)</div>`),
+
+T("Androide U3","Inecuaciones cuadráticas",
+`Ej.1: x²−5x+6 > 0 &nbsp; · &nbsp; Ej.2: x²−x−12 ≤ 0`,
+`Ej.1: (x−2)(x−3)>0 → <span class="answer">(−∞,2)∪(3,+∞)</span><br>Ej.2: (x−4)(x+3)≤0 → <span class="answer">[−3,4]</span>`),
+
+T("Androide U3","Inecuaciones racionales",
+`Ej.1: (3x+6)/4 ≤ 5 &nbsp; · &nbsp; Ej.2: (2x−3)/5 ≥ 1`,
+`Ej.1: 3x≥14 → <span class="answer">(−∞,14/3]</span><br>Ej.2: 2x≥8 → <span class="answer">[4,+∞)</span>`),
+
+T("Androide U3","Inecuación — valor absoluto",
+`Resuelve: |3x − 2| ≤ 5`,
+`−5≤3x−2≤5 → −3≤3x≤7<div class="answer">[−1, 7/3]</div>`),
+
+T("Androide U3","Inecuaciones irracionales",
+`Ej.1: √(x−5) < 3 &nbsp; · &nbsp; Ej.2: √(x+4) > 2`,
+`Ej.1: dominio x≥5, x<14 → <span class="answer">[5,14)</span><br>Ej.2: dominio x≥−4, x>0 → <span class="answer">(0,+∞)</span>`),
+
+T("Androide U3","Inecuación exponencial",
+`Resuelve: 2^(x+3) ≤ 16`,
+`2^(x+3)≤2⁴ → x≤1<div class="answer">(−∞, 1]</div>`),
+
+T("Androide U3","Inecuaciones logarítmicas",
+`Ej.1: log₄(2x−4) < 2 &nbsp; · &nbsp; Ej.2: log₃(x−1) > 3`,
+`Ej.1: dominio x>2, x<10 → <span class="answer">(2,10)</span><br>Ej.2: dominio x>1, x>28 → <span class="answer">(28,+∞)</span>`),
+
+T("Toppo & Dyspo","Función lineal",
+`f(x) = (1/3)x + 3, para x entre −3 y 3.`,
+`<div class="answer">Dominio: (−3,3) · Rango: (2,4)</div>`),
+
+T("Toppo & Dyspo","Función cuadrática creciente",
+`f(x) = 2x² − 4x + 5`,
+`Vértice (2,1)<div class="answer">Dominio: (−1,5) · Rango: [1,10)</div>`),
+
+T("Toppo & Dyspo","Función cuadrática decreciente",
+`f(x) = −x² + 6x − 5`,
+`Vértice (3,4)<div class="answer">Dominio: (0,6) · Rango: (−5,4]</div>`),
+
+T("Toppo & Dyspo","Función racional",
+`f(x) = 2x + 3/(x−1)`,
+`Asíntota vertical x=1, horizontal y=2<div class="answer">Dominio: ℝ−{1} · Rango: ℝ−{2}</div>`),
+
+T("Toppo & Dyspo","Función logarítmica",
+`f(x) = log₅(−2x + 8)`,
+`−2x+8>0 → x<4<div class="answer">Dominio: (−∞,4) · Rango: ℝ</div>`),
+
+T("Toppo & Dyspo","Función exponencial",
+`f(x) = 2^x + 1`,
+`<div class="answer">Dominio: ℝ · Rango: (1,+∞)</div>`),
+
+T("Jiren","Suma de funciones",
+`f(x)=3x²+5x−2, g(x)=x²−4x+7. Calcula (f+g)(x).<br>Además f(x)=2x²−3x+4, g(x)=x²+5x−6.`,
+`<div class="formula">(f+g)(x) = 4x² + x + 5</div><div class="formula">(f+g)(x) = 3x² + 2x − 2</div>`),
+
+T("Jiren","Resta de funciones",
+`Con los mismos pares de funciones, calcula (f−g)(x).`,
+`<div class="formula">(f−g)(x) = 2x² + 9x − 9</div><div class="formula">(f−g)(x) = x² − 8x + 10</div>`),
+
+T("Jiren","Multiplicación de funciones",
+`Calcula (f·g)(x) para ambos pares.`,
+`<div class="formula">(f·g)(x) = 3x⁴ − 7x³ − x² + 43x − 14</div><div class="formula">(f·g)(x) = 2x⁴ + 7x³ − 23x² + 38x − 24</div>`),
+
+T("Jiren","División de funciones",
+`Calcula (f/g)(x) para f=3x²+5x−2, g=x²−4x+7; y f=2x²−3x+4, g=x²+5x−6.`,
+`Sin factores comunes que simplifiquen:<div class="formula">(f/g)(x) = (3x²+5x−2)/(x²−4x+7)</div>g(x)=(x+6)(x−1), no comparte raíces con f:<div class="formula">(f/g)(x) = (2x²−3x+4)/[(x+6)(x−1)]</div>`),
+
+T("Jiren","Golpe final — evaluar en un punto",
+`Con (f+g)(x)=3x²+2x−2, evalúa en x=−2.`,
+`3(4)+2(−2)−2 = 12−4−2<div class="answer">= 6</div>`),
+];
+
+let idx = 0;
+const completed = new Set();
+
+function renderMenu(){
+  const menu = document.getElementById('menu');
+  menu.innerHTML = '';
+  slides.forEach((s,i)=>{
+    const b = document.createElement('button');
+    b.textContent = (i+1);
+    b.onclick = ()=>{ idx = i; render(); };
+    menu.appendChild(b);
+  });
+}
+
+function updateKi(){
+  const pct = Math.round((completed.size / slides.length) * 100);
+  document.getElementById('kiFill').style.width = pct + '%';
+  document.getElementById('kiPct').textContent = pct + '%';
+  if(completed.size === slides.length){
+    document.getElementById('overlay').classList.add('show');
+  }
+}
+
+function render(){
+  const s = slides[idx];
+  const r = findRound(idx);
+  document.getElementById('opponentTag').textContent = '⚔ ' + s.opponent;
+  document.getElementById('slideSub').textContent = 'Acertijo ' + (idx+1) + ' de ' + slides.length;
+  document.getElementById('slideTitle').textContent = s.title;
+  document.getElementById('slideBody').innerHTML = s.body;
+  document.getElementById('solutionBody').innerHTML = s.solution;
+  document.getElementById('solutionBox').classList.remove('show');
+  document.getElementById('confirmMsg').textContent = '';
+  document.getElementById('dots').textContent = (idx+1) + ' / ' + slides.length;
+  document.getElementById('prevBtn').disabled = idx===0;
+  document.getElementById('nextBtn').disabled = idx===slides.length-1;
+
+  const banner = document.getElementById('roundBanner');
+  if(r && r.from === idx){
+    banner.style.display = 'block';
+    document.getElementById('roundName').textContent = r.name;
+    document.getElementById('roundText').textContent = r.text;
+  } else {
+    banner.style.display = 'none';
+  }
+
+  [...document.getElementById('menu').children].forEach((b,i)=>{
+    b.classList.toggle('active', i===idx);
+    b.classList.toggle('done', completed.has(i));
+  });
+  document.querySelector('.stage').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+document.getElementById('revealBtn').onclick = ()=>{
+  document.getElementById('solutionBox').classList.toggle('show');
+};
+document.getElementById('winBtn').onclick = ()=>{
+  completed.add(idx);
+  document.getElementById('confirmMsg').textContent = '¡Ki incrementado! El equipo del Universo 7 respira.';
+  updateKi();
+  [...document.getElementById('menu').children][idx].classList.add('done');
+};
+document.getElementById('retryBtn').onclick = ()=>{
+  document.getElementById('confirmMsg').textContent = 'Sin problema — hasta Goku tuvo que repetir su técnica varias veces. Vuelve a intentarlo.';
+};
+document.getElementById('prevBtn').onclick = ()=>{ if(idx>0){ idx--; render(); } };
+document.getElementById('nextBtn').onclick = ()=>{ if(idx<slides.length-1){ idx++; render(); } };
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='ArrowRight') document.getElementById('nextBtn').click();
+  if(e.key==='ArrowLeft') document.getElementById('prevBtn').click();
+});
+
+renderMenu();
+render();
+updateKi();
+</script>
+</body>
+</html>
