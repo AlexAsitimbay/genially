@@ -24,57 +24,61 @@
   .eyebrow{ font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:3px; color:var(--ki); text-transform:uppercase; }
   header h1{ font-size:42px; margin:4px 0 0; background:linear-gradient(90deg,var(--gold),var(--orange)); -webkit-background-clip:text; background-clip:text; color:transparent; }
   header p{ font-size:13px; opacity:.65; margin:2px 0 0; }
- 
+
   .ki-wrap{ margin:16px 0; }
   .ki-label{ display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:11px; opacity:.75; margin-bottom:5px; }
   .ki-bar{ height:10px; border-radius:6px; background:rgba(255,255,255,0.08); overflow:hidden; border:1px solid var(--line); }
   .ki-fill{ height:100%; width:0%; border-radius:6px; background:linear-gradient(90deg,var(--ki),var(--orange),var(--gold)); transition:width .6s ease; box-shadow:0 0 12px rgba(255,176,46,0.6); }
- 
+
   /* MAP */
-  .map-wrap{ position:relative; background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:10px; overflow:hidden; }
+  .map-wrap{ position:relative; background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:10px 10px 78px; overflow:visible; }
+  .bg-scene{ position:absolute; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none; border-radius:16px; }
   svg#pathSvg{ width:100%; height:auto; display:block; }
   .path-line{ fill:none; stroke:rgba(255,255,255,0.15); stroke-width:3; stroke-dasharray:2 10; stroke-linecap:round; }
   .path-line.lit{ stroke:url(#kiGrad); stroke-dasharray:none; filter:drop-shadow(0 0 4px rgba(255,176,46,.7)); }
- 
+
   .node{
     position:absolute; width:64px; height:64px; border-radius:50%;
     display:flex; align-items:center; justify-content:center; flex-direction:column;
     transform:translate(-50%,-50%); cursor:pointer; transition:.25s;
     background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.15), rgba(0,0,0,0.3));
-    border:2px solid var(--line);
+    border:2px solid var(--zc, var(--line));
   }
-  .node .emoji{ font-size:24px; }
+  .node .crest{ width:32px; height:32px; display:block; pointer-events:none; padding:8px; }
   .node .label{ position:absolute; top:70px; font-family:'JetBrains Mono', monospace; font-size:9.5px; text-align:center; width:110px; left:50%; transform:translateX(-50%); opacity:.8; }
   .node.locked{ opacity:.35; cursor:not-allowed; filter:grayscale(1); }
   .node.active{ border-color:var(--gold); box-shadow:0 0 0 4px rgba(255,176,46,0.15), 0 0 18px rgba(255,176,46,0.5); animation:pulseNode 1.6s infinite; }
   .node.done{ border-color:var(--ki); background:radial-gradient(circle at 35% 30%, rgba(79,195,247,0.25), rgba(0,0,0,0.3)); }
   .node.done::after{ content:"⚡"; position:absolute; top:-8px; right:-8px; font-size:16px; }
   @keyframes pulseNode{ 0%,100%{ transform:translate(-50%,-50%) scale(1);} 50%{ transform:translate(-50%,-50%) scale(1.08);} }
- 
+
   .player{
     position:absolute; width:34px; height:34px; border-radius:50%; transform:translate(-50%,-50%);
     background:radial-gradient(circle, #fff8e0, var(--gold) 60%, var(--orange));
     box-shadow:0 0 14px rgba(255,176,46,0.8); transition: left 1s cubic-bezier(.4,0,.2,1), top 1s cubic-bezier(.4,0,.2,1);
     z-index:5; display:flex; align-items:center; justify-content:center; font-size:16px;
+    pointer-events:none;
   }
- 
+  .node{ z-index:3; }
+  .node .label{ pointer-events:none; }
+
   /* BATTLE MODAL */
   .overlay{ position:fixed; inset:0; background:rgba(4,4,9,0.92); display:none; align-items:center; justify-content:center; z-index:100; padding:16px; }
   .overlay.show{ display:flex; }
   .battle{ background:var(--bg2); border:1px solid var(--line); border-radius:16px; max-width:560px; width:100%; padding:22px 22px 20px; position:relative; box-shadow:0 30px 70px rgba(0,0,0,0.5); }
   .battle.shake{ animation:shake .35s; }
   @keyframes shake{ 0%,100%{transform:translateX(0);} 20%{transform:translateX(-8px);} 40%{transform:translateX(8px);} 60%{transform:translateX(-5px);} 80%{transform:translateX(5px);} }
- 
+
   .vs-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
   .fighter{ text-align:center; width:40%; }
-  .fighter .av{ font-size:34px; display:block; }
+  .fighter .av{ font-size:34px; display:flex; align-items:center; justify-content:center; width:64px; height:64px; margin:0 auto; }
   .fighter .name{ font-family:'Bebas Neue', sans-serif; font-size:16px; letter-spacing:.5px; margin-top:2px; }
   .hp-bar{ height:8px; border-radius:5px; background:rgba(255,255,255,0.08); overflow:hidden; margin-top:5px; border:1px solid var(--line); }
   .hp-fill{ height:100%; background:linear-gradient(90deg,var(--danger),var(--orange)); transition:width .5s ease; }
   .vs-badge{ font-family:'Bebas Neue', sans-serif; font-size:20px; color:var(--gold); }
- 
+
   .round-text{ font-size:12.5px; opacity:.75; line-height:1.5; margin:10px 0 14px; border-left:3px solid var(--orange); padding-left:10px; }
- 
+
   .q-count{ font-family:'JetBrains Mono', monospace; font-size:11px; opacity:.55; margin-bottom:4px; }
   .q-title{ font-size:20px; margin:0 0 6px; font-family:'Bebas Neue', sans-serif; letter-spacing:.5px; }
   .q-body{ font-size:14.5px; line-height:1.55; margin-bottom:10px; }
@@ -82,7 +86,7 @@
   table.dbs{ border-collapse:collapse; margin:10px 0; width:100%; font-family:'JetBrains Mono', monospace; font-size:11.5px;}
   table.dbs th, table.dbs td{ border:1px solid var(--line); padding:5px 7px; text-align:center; }
   table.dbs th{ color:var(--gold); }
- 
+
   .reveal-btn{ font-family:'Bebas Neue', sans-serif; font-size:16px; letter-spacing:1px; background:linear-gradient(90deg,var(--orange),var(--gold)); border:none; color:#1a0f00; padding:8px 18px; border-radius:24px; cursor:pointer; }
   .solution{ margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); display:none; }
   .solution.show{ display:block; animation:fadeIn .3s ease; }
@@ -94,7 +98,7 @@
   .retry-btn{ background:rgba(230,57,70,0.12); border:1px solid var(--danger); color:var(--danger); }
   .close-x{ position:absolute; top:12px; right:14px; background:none; border:none; color:var(--white); opacity:.5; font-size:18px; cursor:pointer; }
   .close-x:hover{ opacity:1; }
- 
+
   /* FLASH + BLAST */
   .flash{ position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:200; }
   .flash.go{ animation:flashAnim .4s ease; }
@@ -104,7 +108,7 @@
     transform:translate(-50%,-50%); opacity:0; pointer-events:none; z-index:199; }
   .blast.go{ animation:blastAnim .6s ease-out; }
   @keyframes blastAnim{ 0%{ width:10px; height:10px; opacity:1;} 100%{ width:900px; height:900px; opacity:0;} }
- 
+
   /* VICTORY */
   .victory-box{ text-align:center; max-width:520px; }
   .victory-box h2{ font-size:48px; background:linear-gradient(90deg,var(--gold),var(--orange)); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:6px;}
@@ -112,7 +116,7 @@
   .victory-box button{ margin-top:16px; font-family:'Bebas Neue', sans-serif; font-size:17px; letter-spacing:1px; background:linear-gradient(90deg,var(--orange),var(--gold)); border:none; color:#1a0f00; padding:10px 24px; border-radius:30px; cursor:pointer; }
   .confetti{ position:absolute; top:-10px; width:8px; height:14px; opacity:.9; animation:fall linear forwards; }
   @keyframes fall{ to{ transform:translateY(560px) rotate(400deg); opacity:0; } }
- 
+
   @media (max-width:640px){
     header h1{ font-size:30px; }
     .node{ width:52px; height:52px; }
@@ -124,20 +128,33 @@
 <body>
 <div class="flash" id="flash"></div>
 <div class="blast" id="blast"></div>
- 
+
 <div class="app">
   <header>
     <div class="eyebrow">Universo 7 · Torneo del Poder</div>
     <h1>MATEMÁTICA SAIYAN</h1>
     <p>Avanza por el mapa, entra en combate y resuelve para ganar ki</p>
   </header>
- 
+
   <div class="ki-wrap">
     <div class="ki-label"><span>KI ACUMULADO</span><span id="kiPct">0%</span></div>
     <div class="ki-bar"><div class="ki-fill" id="kiFill"></div></div>
   </div>
- 
+
   <div class="map-wrap">
+    <svg class="bg-scene" viewBox="0 0 900 400" preserveAspectRatio="xMidYMid slice">
+      <circle cx="820" cy="70" r="46" fill="#1a2438" opacity="0.6"/>
+      <circle cx="820" cy="70" r="46" fill="none" stroke="#4fc3f7" stroke-width="1" opacity="0.3"/>
+      <circle cx="805" cy="55" r="6" fill="#0a0a12" opacity="0.4"/>
+      <circle cx="60" cy="60" r="1.6" fill="#f4f2ec" opacity="0.5"/>
+      <circle cx="140" cy="30" r="1.2" fill="#f4f2ec" opacity="0.4"/>
+      <circle cx="300" cy="50" r="1.8" fill="#f4f2ec" opacity="0.6"/>
+      <circle cx="480" cy="20" r="1.2" fill="#f4f2ec" opacity="0.4"/>
+      <circle cx="600" cy="40" r="1.6" fill="#f4f2ec" opacity="0.5"/>
+      <circle cx="700" cy="15" r="1.2" fill="#f4f2ec" opacity="0.4"/>
+      <circle cx="380" cy="360" r="1.4" fill="#f4f2ec" opacity="0.35"/>
+      <circle cx="180" cy="370" r="1.2" fill="#f4f2ec" opacity="0.3"/>
+    </svg>
     <svg id="pathSvg" viewBox="0 0 900 380" preserveAspectRatio="none">
       <defs>
         <linearGradient id="kiGrad" x1="0" y1="0" x2="1" y2="0">
@@ -146,14 +163,14 @@
           <stop offset="100%" stop-color="#ffb02e"/>
         </linearGradient>
       </defs>
-      <path id="mainPath" class="path-line" d="M 60 320 C 160 320, 140 200, 240 190 S 360 90, 440 150 S 560 300, 650 260 S 800 100, 840 60"/>
-      <path id="litPath" class="path-line lit" d="M 60 320 C 160 320, 140 200, 240 190 S 360 90, 440 150 S 560 300, 650 260 S 800 100, 840 60" stroke-dasharray="0 2000"/>
+      <path id="mainPath" class="path-line" d="M 70 340 C 160 340, 170 220, 230 200 S 360 260, 400 310 S 480 180, 530 150 S 620 260, 660 280 S 740 170, 790 150 S 830 90, 850 60"/>
+      <path id="litPath" class="path-line lit" d="M 70 340 C 160 340, 170 220, 230 200 S 360 260, 400 310 S 480 180, 530 150 S 620 260, 660 280 S 740 170, 790 150 S 830 90, 850 60" stroke-dasharray="0 2000"/>
     </svg>
     <div id="nodesLayer"></div>
     <div class="player" id="player">🥋</div>
   </div>
 </div>
- 
+
 <div class="overlay" id="battleOverlay">
   <div class="battle" id="battleBox">
     <button class="close-x" id="closeBattle">✕</button>
@@ -183,7 +200,7 @@
     </div>
   </div>
 </div>
- 
+
 <div class="overlay" id="victoryOverlay">
   <div class="victory-box">
     <h2>¡VICTORIA!</h2>
@@ -191,11 +208,11 @@
     <button id="closeVictory">volver al mapa</button>
   </div>
 </div>
- 
+
 <script>
 /* ---------- DATA ---------- */
 const zones = [
-{ id:0, opp:"Rozie & Basil", av:"🔷", x:60, y:320,
+{ id:0, opp:"Rozie & Basil", color:"#4fc3f7", shape:"bolt", stance:"twin", x:70, y:340,
   text:"El árbitro Marcarita da inicio al torneo. El Universo 9 abre el combate con trampas lógicas.",
   qs:[
     {title:"Tabla de verdad — contingencia", body:`Determina la solución de: <span class="formula">[(p ∧ q) → (r ∨ ¬p)]</span>`,
@@ -213,7 +230,7 @@ const zones = [
 <tr><td>V</td><td>V</td><td>V</td><td>V</td><td>V</td></tr><tr><td>V</td><td>F</td><td>F</td><td>F</td><td>V</td></tr>
 <tr><td>F</td><td>V</td><td>V</td><td>F</td><td>V</td></tr><tr><td>F</td><td>F</td><td>V</td><td>F</td><td>V</td></tr></table><div class="answer">Sí, tautología (Modus Ponens)</div>`},
   ]},
-{ id:1, opp:"Sabios U4", av:"🟣", x:240, y:190,
+{ id:1, opp:"Sabios U4", color:"#b388ff", shape:"hex", stance:"guard", x:230, y:200,
   text:"El Universo 4 combina escuadrones que se solapan. Separa lo exclusivo de lo compartido.",
   qs:[
     {title:"Conjuntos — escuela", body:`100 estudiantes. Fútbol 26, Música 38, Teatro 33. F∩M:15, F∩T:10, T∩M:16, los 3:6.<br>① ¿Solo fútbol? ② ¿Al menos 2 actividades?`,
@@ -221,7 +238,7 @@ const zones = [
     {title:"Conjuntos — extracurricular", body:`200 estudiantes: Rancho, Madrina, Mecánica. Los 3 a la vez:12. Solo Mecánica:2. Solo Madrina:2. Solo Rancho:12.<br>① ¿Exclusivo Rancho? ② ¿Exclusivo a uno solo?`,
      sol:`① <span class="answer">12 personas</span><br>② 2+2+12 = <span class="answer">16 personas</span>`},
   ]},
-{ id:2, opp:"Cabba", av:"🟢", x:440, y:150,
+{ id:2, opp:"Cabba", color:"#6fcf6f", shape:"shield", stance:"calm", x:400, y:310,
   text:"Cabba reta con un duelo de proporciones: cuadrillas construyendo a distinto ritmo.",
   qs:[
     {title:"Regla de 3 — obreros y casas", body:`4 obreros → 10 días → 2 casas. ¿8 obreros, 4 casas?
@@ -230,7 +247,7 @@ const zones = [
     {title:"Regla de 3 — jornada", body:`10 obreros, 6h/día → 12 días. Con 8 obreros y 9h/día, ¿cuántos días?`,
      sol:`x = 12·(10/8)·(6/9) = 12·(10/12)<div class="answer">x = 10 días</div>`},
   ]},
-{ id:3, opp:"Caulifla & Kale", av:"🟡", x:650, y:260,
+{ id:3, opp:"Caulifla & Kale", color:"#ffd54f", shape:"twin", stance:"twin", x:530, y:150,
   text:"Caulifla y Kale fusionan ataques que solo se resuelven despejando variable por variable.",
   qs:[
     {title:"Sistemas — eliminación", body:`<div class="formula">2x + 3y = 8
@@ -241,7 +258,7 @@ x+2y+2z=13
     {title:"Sistemas — igualación", body:`<div class="formula">x + y = 7
 2x − y = 1</div>`, sol:`x=7−y=1+y → y=3, x=4<div class="answer">(4, 3)</div>`},
   ]},
-{ id:4, opp:"Androides U3", av:"⚙️", x:840, y:60,
+{ id:4, opp:"Androides U3", color:"#90a4ae", shape:"gear", stance:"tech", x:660, y:280,
   text:"Los androides acorralan con límites y restricciones invisibles: cada inecuación cierra una trampa.",
   qs:[
     {title:"Inecuación lineal", body:`−3x ≤ 11 − 5`, sol:`−3x≤6 → x≥−2<div class="answer">[−2,+∞)</div>`},
@@ -252,7 +269,7 @@ x+2y+2z=13
     {title:"Inecuación exponencial", body:`2^(x+3)≤16`, sol:`x+3≤4 → x≤1<div class="answer">(−∞,1]</div>`},
     {title:"Inecuaciones logarítmicas", body:`log₄(2x−4)<2 · log₃(x−1)>3`, sol:`x>2,x<10 → <span class="answer">(2,10)</span><br>x>1,x>28 → <span class="answer">(28,+∞)</span>`},
   ]},
-{ id:5, opp:"Toppo & Dyspo", av:"⚖️", x:440, y:150+240,
+{ id:5, opp:"Toppo & Dyspo", color:"#64b5f6", shape:"scale", stance:"justice", x:790, y:150,
   text:"Toppo exige precisión: cada función tiene un dominio donde existe y un rango donde golpea.",
   qs:[
     {title:"Función lineal", body:`f(x)=(1/3)x+3, x∈[−3,3]`, sol:`<div class="answer">Dominio (−3,3) · Rango (2,4)</div>`},
@@ -262,7 +279,7 @@ x+2y+2z=13
     {title:"Función logarítmica", body:`f(x)=log₅(−2x+8)`, sol:`x<4<div class="answer">Dominio (−∞,4) · Rango ℝ</div>`},
     {title:"Función exponencial", body:`f(x)=2^x+1`, sol:`<div class="answer">Dominio ℝ · Rango (1,+∞)</div>`},
   ]},
-{ id:6, opp:"Jiren", av:"🔴", x:60+250, y:320-60,
+{ id:6, opp:"Jiren", color:"#ff5252", shape:"blaze", stance:"blaze", x:850, y:60,
   text:"Jiren combina todo tu entrenamiento: suma, resta, multiplica y divide tus propias técnicas.",
   qs:[
     {title:"Suma de funciones", body:`f=3x²+5x−2, g=x²−4x+7 · f=2x²−3x+4, g=x²+5x−6`, sol:`<div class="formula">(f+g)=4x²+x+5</div><div class="formula">(f+g)=3x²+2x−2</div>`},
@@ -272,28 +289,83 @@ x+2y+2z=13
     {title:"Golpe final: evaluar en un punto", body:`(f+g)(x)=3x²+2x−2, evalúa en x=−2`, sol:`3(4)+2(−2)−2=12−4−2<div class="answer">= 6</div>`},
   ]},
 ];
- 
+
 let currentZone = 0;
 let zoneQ = 0;
 const zoneDone = new Set();
 let totalQ = zones.reduce((a,z)=>a+z.qs.length,0);
 let completedQ = 0;
- 
+
 /* ---------- MAP RENDER ---------- */
 const nodesLayer = document.getElementById('nodesLayer');
 function pctPos(x,y){ return { left:(x/900*100)+'%', top:(y/380*100)+'%' }; }
- 
+
+/* ---------- ORIGINAL FIGHTER SILHOUETTE + AURA (battle portraits, no copyrighted art) ---------- */
+function silhouetteSVG(color, stance){
+  const stances = {
+    calm: `M50 20 a8 8 0 1 0 0.1 0 M40 34 Q50 30 60 34 L64 60 Q58 62 50 62 Q42 62 36 60 Z
+           M36 60 L30 90 M64 60 L70 90 M44 62 L40 92 M56 62 L60 92`,
+    guard: `M50 18 a8 8 0 1 0 0.1 0 M38 33 Q50 28 62 33 L67 58 Q58 63 50 63 Q42 63 33 58 Z
+            M33 58 L18 50 M67 58 L82 50 M43 63 L38 92 M57 63 L62 92`,
+    twin: `M42 18 a6 6 0 1 0 0.1 0 M58 18 a6 6 0 1 0 0.1 0
+           M34 30 Q42 27 50 30 L52 52 Q46 55 40 55 Q34 55 30 52 Z
+           M50 30 Q58 27 66 30 L70 52 Q64 55 58 55 Q52 55 50 52 Z
+           M30 52 L20 78 M40 55 L36 90 M70 52 L80 78 M60 55 L64 90`,
+    tech: `M50 20 h-10 v8 h20 v-8 h-10 M38 32 L62 32 L66 58 Q58 62 50 62 Q42 62 34 58 Z
+           M34 58 L26 90 M66 58 L74 90 M42 62 L40 92 M58 62 L60 92`,
+    justice: `M50 18 a8 8 0 1 0 0.1 0 M36 32 Q50 27 64 32 L68 60 Q58 64 50 64 Q42 64 32 60 Z
+              M50 32 L50 64 M32 60 L20 88 M68 60 L80 88 M40 64 L36 92 M60 64 L64 92`,
+    blaze: `M50 16 a8 8 0 1 0 0.1 0 M36 30 Q50 24 64 30 L70 60 Q58 66 50 66 Q42 66 30 60 Z
+            M30 60 L14 44 M70 60 L86 44 M42 66 L34 94 M58 66 L66 94`,
+  };
+  const d = stances[stance] || stances.calm;
+  return `<svg viewBox="0 0 100 100" width="100%" height="100%">
+    <defs>
+      <radialGradient id="aura-${stance}" cx="50%" cy="55%" r="60%">
+        <stop offset="0%" stop-color="${color}" stop-opacity="0.55"/>
+        <stop offset="70%" stop-color="${color}" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <circle cx="50" cy="55" r="46" fill="url(#aura-${stance})"/>
+    <circle cx="50" cy="55" r="40" fill="none" stroke="${color}" stroke-width="1" opacity="0.35"/>
+    <circle cx="50" cy="55" r="30" fill="none" stroke="${color}" stroke-width="1" opacity="0.25"/>
+    <path d="${d}" fill="none" stroke="${color}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+function crestSVG(color, shape){
+  const shapes = {
+    bolt: `<polygon points="13,2 4,15 11,15 8,26 21,11 13,11" fill="${color}"/>`,
+    hex: `<polygon points="14,2 24,8 24,20 14,26 4,20 4,8" fill="none" stroke="${color}" stroke-width="2.4"/><circle cx="14" cy="14" r="4" fill="${color}"/>`,
+    shield: `<path d="M14 2 L24 6 V14 C24 21 19 25 14 27 C9 25 4 21 4 14 V6 Z" fill="none" stroke="${color}" stroke-width="2.4"/><path d="M14 9 V19 M9 14 H19" stroke="${color}" stroke-width="2.2"/>`,
+    twin: `<circle cx="10" cy="14" r="6" fill="none" stroke="${color}" stroke-width="2.4"/><circle cx="18" cy="14" r="6" fill="none" stroke="${color}" stroke-width="2.4"/>`,
+    gear: `<circle cx="14" cy="14" r="5" fill="${color}"/><g stroke="${color}" stroke-width="2.4">
+      <line x1="14" y1="2" x2="14" y2="7"/><line x1="14" y1="21" x2="14" y2="26"/>
+      <line x1="2" y1="14" x2="7" y2="14"/><line x1="21" y1="14" x2="26" y2="14"/>
+      <line x1="5.5" y1="5.5" x2="9" y2="9"/><line x1="19" y1="19" x2="22.5" y2="22.5"/>
+      <line x1="22.5" y1="5.5" x2="19" y2="9"/><line x1="9" y1="19" x2="5.5" y2="22.5"/>
+    </g>`,
+    scale: `<line x1="14" y1="3" x2="14" y2="24" stroke="${color}" stroke-width="2.4"/><line x1="5" y1="9" x2="23" y2="9" stroke="${color}" stroke-width="2.4"/>
+      <path d="M5 9 L2 16 A4 4 0 0 0 8 16 Z" fill="none" stroke="${color}" stroke-width="2"/>
+      <path d="M23 9 L20 16 A4 4 0 0 0 26 16 Z" fill="none" stroke="${color}" stroke-width="2"/>`,
+    blaze: `<path d="M14 2 C10 9 6 11 6 17 A8 8 0 0 0 22 17 C22 11 18 9 14 2Z" fill="${color}"/><circle cx="14" cy="18" r="3" fill="#0a0a12"/>`,
+  };
+  return `<svg viewBox="0 0 28 28" width="100%" height="100%">${shapes[shape]||shapes.bolt}</svg>`;
+}
+
 zones.forEach((z,i)=>{
   const n = document.createElement('div');
   n.className = 'node locked';
   n.id = 'node'+i;
+  n.style.setProperty('--zc', z.color);
   const p = pctPos(z.x, z.y);
   n.style.left = p.left; n.style.top = p.top;
-  n.innerHTML = `<span class="emoji">${z.av}</span><span class="label">${z.opp}</span>`;
+  n.innerHTML = `<span class="crest">${crestSVG(z.color, z.shape)}</span><span class="label">${z.opp}</span>`;
   n.onclick = ()=> tryOpenZone(i);
   nodesLayer.appendChild(n);
 });
- 
+
 function updatePlayerPos(i){
   const z = zones[i];
   const p = pctPos(z.x, z.y);
@@ -301,7 +373,7 @@ function updatePlayerPos(i){
   player.style.left = p.left;
   player.style.top = p.top;
 }
- 
+
 function refreshMap(){
   zones.forEach((z,i)=>{
     const n = document.getElementById('node'+i);
@@ -316,24 +388,24 @@ function refreshMap(){
   const frac = zoneDone.size / zones.length;
   litPath.style.strokeDasharray = (totalLen*frac) + ' ' + totalLen;
 }
- 
+
 function tryOpenZone(i){
   if(i > currentZone) return;
   openBattle(i);
 }
- 
+
 /* ---------- BATTLE ---------- */
 function openBattle(i){
   currentZone = i;
   zoneQ = 0;
   const z = zones[i];
-  document.getElementById('oppAv').textContent = z.av;
+  document.getElementById('oppAv').innerHTML = silhouetteSVG(z.color, z.stance);
   document.getElementById('oppName').textContent = z.opp;
   document.getElementById('roundText').textContent = z.text;
   document.getElementById('battleOverlay').classList.add('show');
   renderQuestion();
 }
- 
+
 function renderQuestion(){
   const z = zones[currentZone];
   const hpPct = Math.max(0, 100 - Math.round((zoneQ/z.qs.length)*100));
@@ -349,7 +421,7 @@ function renderQuestion(){
   document.getElementById('solutionBody').innerHTML = q.sol;
   document.getElementById('solutionBox').classList.remove('show');
 }
- 
+
 document.getElementById('revealBtn').onclick = ()=>{
   document.getElementById('solutionBox').classList.toggle('show');
 };
@@ -368,7 +440,7 @@ document.getElementById('retryBtn').onclick = ()=>{
 document.getElementById('closeBattle').onclick = ()=>{
   document.getElementById('battleOverlay').classList.remove('show');
 };
- 
+
 function flashHit(){
   const flash = document.getElementById('flash');
   const blast = document.getElementById('blast');
@@ -378,7 +450,7 @@ function flashHit(){
   box.classList.add('shake');
   setTimeout(()=>box.classList.remove('shake'), 350);
 }
- 
+
 function defeatZone(){
   zoneDone.add(currentZone);
   document.getElementById('battleOverlay').classList.remove('show');
@@ -393,17 +465,17 @@ function defeatZone(){
     }, 400);
   }
 }
- 
+
 function updateKi(){
   const pct = Math.round((completedQ/totalQ)*100);
   document.getElementById('kiFill').style.width = pct+'%';
   document.getElementById('kiPct').textContent = pct+'%';
 }
- 
+
 document.getElementById('closeVictory').onclick = ()=>{
   document.getElementById('victoryOverlay').classList.remove('show');
 };
- 
+
 function launchConfetti(){
   const colors = ['#ffb02e','#ff6a1a','#4fc3f7','#e63946','#f4f2ec'];
   const box = document.querySelector('.victory-box');
@@ -418,7 +490,7 @@ function launchConfetti(){
     setTimeout(()=>c.remove(), 3000);
   }
 }
- 
+
 /* init */
 refreshMap();
 updateKi();
